@@ -69,7 +69,7 @@ jobs:
             type=raw,value=${{ needs.tagging.outputs.tag_name }}
             type=raw,value=latest
       # Step 7
-      - name: 빌드 및 이미지 푸시 수행 ( Step 6의 태깅을 기반으로 도커이미지에 태깅 적용 )
+      - name: 빌드 및 이미지 푸시 수행  ( Step 6의 태깅을 기반으로 도커이미지에 태깅 적용 )
         uses: docker/build-push-action@v7
         with:
           context: .
