@@ -1,13 +1,15 @@
 spring:
   application:
     name: asset-box-consumer
+  config:
+    import: optional:file:.env[.properties]
   mail:
     # 이메일 전송에 사용할 SMTP 서버의 호스트주소 ( Gmail의 SMTP 서버 )
     host: smtp.gmail.com
     port: 587 # SMTP 서버가 사용할 포트번호 : Gmail은 기본 STARTTLS를 사용하므로 587 설정
     # 이메일 전송에 사용할 Gmail 계정 사용자 & 비밀번호
     username: wjdtn3902@gmail.com
-    password: bfyhstytkkyvqnbd
+    password: ${GOOGLE_SMTP_PASSWORD}
     properties:
       mail:
         smtp:
