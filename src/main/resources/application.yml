@@ -1,13 +1,15 @@
 spring:
   application:
     name: asset-box-consumer
+  config:
+    import: optional:file:.env.dev[.properties]
   mail:
     # 이메일 전송에 사용할 SMTP 서버의 호스트주소 ( Gmail의 SMTP 서버 )
-    host: smtp.gmail.com
-    port: 587 # SMTP 서버가 사용할 포트번호 : Gmail은 기본 STARTTLS를 사용하므로 587 설정
+    host: ${GOOGLE_SMTP_HOST}
+    port: ${GOOGLE_SMTP_PORT} # SMTP 서버가 사용할 포트번호 : Gmail은 기본 STARTTLS를 사용하므로 587 설정
     # 이메일 전송에 사용할 Gmail 계정 사용자 & 비밀번호
-    username: wjdtn3902@gmail.com
-    password: bfyhstytkkyvqnbd
+    username: ${GOOGLE_SMTP_USERNAME}
+    password: ${GOOGLE_SMTP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -24,7 +26,7 @@ spring:
           # 데이터 전송 시 Timeout
           writetimeout: 5000
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
     consumer:
       email-topic-group-id: email-topic-group
       enable-auto-commit: false
