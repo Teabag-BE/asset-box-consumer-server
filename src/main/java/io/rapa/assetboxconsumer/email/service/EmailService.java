@@ -7,6 +7,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
@@ -17,13 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender javaMailSender;
     private final ObjectMapper objectMapper;
+
     private final KafkaTemplate kafkaTemplate;
+    private final RedisTemplate redisTemplate;
 
     private final String TOPIC_DLQ_NAME = "email-topic-dlq";
 
@@ -80,14 +85,32 @@ public class EmailService {
             String message,
             Acknowledgment ack
     ){
+
+
         try{
             SendMessageDto dto = objectMapper.readValue(
                     message,
                     new TypeReference<SendMessageDto>() {
                     }
             );
+
+            // 멱등성 키 사용하여 멱등성 보장
+            String processedKey = "email:message:processed:" + dto.requestId();
+
+            // 해당 Producer에서 전송한 RequestID 건에 대해 하루동안 멱등성 보장
+            Boolean firstProcessing = redisTemplate.opsForValue().setIfAbsent(
+                    processedKey,
+                    "processedId",
+                    1,
+                    TimeUnit.DAYS
+            );
+
+            if (!Boolean.TRUE.equals(firstProcessing)) return;
+
+            // 메일 전송
             sendSimpleMessage(dto);
             ack.acknowledge();
+
         }catch (Exception e){
             kafkaTemplate.send(
                     TOPIC_DLQ_NAME,
