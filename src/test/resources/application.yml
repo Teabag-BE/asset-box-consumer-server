@@ -34,3 +34,7 @@ spring:
 server:
   port: 8081
 
+custom:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
