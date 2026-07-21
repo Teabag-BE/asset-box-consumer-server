@@ -42,7 +42,7 @@ public class EmailService {
         );
         message.setSubject("[Asset Box] 이메일 인증을 완료해 주세요", "UTF-8");
 
-        String verificationUrl = "%s/api/email/verify?token=%s".formatted(
+        String verificationUrl = "%s/email/verify?token=%s".formatted(
                 normalizeBaseUrl(dto.baseUrl()),
                 dto.token()
         );
