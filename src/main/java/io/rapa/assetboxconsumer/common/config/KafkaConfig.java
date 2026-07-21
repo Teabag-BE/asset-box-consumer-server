@@ -17,7 +17,7 @@ import java.util.Map;
 public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaServer;
-
+    //
     @Bean
     public ConsumerFactory<String,Object> consumerFactory(){
         Map<String, Object> config = new HashMap<>();
@@ -26,7 +26,7 @@ public class KafkaConfig {
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(config);
     }
-
+    //
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListener(){
         ConcurrentKafkaListenerContainerFactory<String, String> listener

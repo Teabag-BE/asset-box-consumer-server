@@ -13,9 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-
     private final RedisProperties redisProperties;
-
     @Bean
     public RedisConnectionFactory emailValidationConnectionFactory(){
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(
@@ -25,7 +23,6 @@ public class RedisConfig {
         redisStandaloneConfiguration.setDatabase(3);
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
-
     @Bean
     @Qualifier("email")
     public RedisTemplate<String,String> emailValidationRedisTemplate(){

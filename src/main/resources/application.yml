@@ -32,7 +32,6 @@ spring:
       enable-auto-commit: false
 server:
   port: 8081
-
 custom:
   redis:
     host: ${REDIS_HOST}
